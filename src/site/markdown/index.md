@@ -1,4 +1,4 @@
-## About Asset Service
+## About DAM Asset Service
 
 A RESTful service for resolving URLs to assets and renditions.
 
