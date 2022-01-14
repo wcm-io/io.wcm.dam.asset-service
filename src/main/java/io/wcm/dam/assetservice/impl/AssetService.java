@@ -150,7 +150,7 @@ public class AssetService implements EventHandler {
     if (StringUtils.isEmpty(selector)) {
       throw new IllegalArgumentException("No selector defined for " + servletInstance.getClass().getName() + " - skipping servlet registration.");
     }
-    Dictionary<String, Object> config = new Hashtable<String, Object>();
+    Dictionary<String, Object> config = new Hashtable<>();
     config.put("sling.servlet.resourceTypes", resourceType);
     config.put("sling.servlet.selectors", selector);
     config.put("sling.servlet.extensions", FileExtension.JSON);
