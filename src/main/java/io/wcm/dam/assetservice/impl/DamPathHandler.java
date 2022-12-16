@@ -19,6 +19,7 @@
  */
 package io.wcm.dam.assetservice.impl;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,7 +36,6 @@ import org.slf4j.LoggerFactory;
 
 import com.day.cq.dam.api.DamConstants;
 import com.day.cq.dam.api.DamEvent;
-import com.google.common.collect.ImmutableSet;
 
 import io.wcm.dam.assetservice.impl.dataversion.ChecksumDataVersionStrategy;
 import io.wcm.dam.assetservice.impl.dataversion.DataVersionStrategy;
@@ -118,7 +118,7 @@ public class DamPathHandler {
     if (paths.isEmpty()) {
       paths.add(DEFAULT_DAM_PATH);
     }
-    return ImmutableSet.copyOf(paths);
+    return Collections.unmodifiableSet(paths);
   }
 
   /**

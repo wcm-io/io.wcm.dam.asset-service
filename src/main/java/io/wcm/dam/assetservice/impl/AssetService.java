@@ -60,7 +60,7 @@ public class AssetService implements EventHandler {
 
   @ObjectClassDefinition(name = "wcm.io DAM Asset Service",
       description = "A RESTful service for resolving URLs to DAM assets and renditions.")
-  static @interface Config {
+  @interface Config {
 
     @AttributeDefinition(name = "Asset Selector", description = "Selector for attaching REST service to DAM asset paths.")
     String assetServletSelector() default "wcm-io-asset-service";
