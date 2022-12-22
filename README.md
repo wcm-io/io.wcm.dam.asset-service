@@ -7,7 +7,7 @@
 A RESTful service for resolving URLs to DAM assets and renditions.
 
 Documentation: https://wcm.io/dam/asset-service/<br/>
-Issues: https://wcm-io.atlassian.net/projects/WDAM<br/>
+Issues: https://github.com/wcm-io/io.wcm.dam.asset-service/issues<br/>
 Wiki: https://wcm-io.atlassian.net/wiki/<br/>
 Continuous Integration: https://github.com/wcm-io/io.wcm.dam.asset-service/actions<br/>
 Commercial support: https://wcm.io/commercial-support.html
