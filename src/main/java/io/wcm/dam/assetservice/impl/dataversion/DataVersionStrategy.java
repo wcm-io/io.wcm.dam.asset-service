@@ -39,7 +39,7 @@ public abstract class DataVersionStrategy {
   /**
    * @param damPath DAM root path
    */
-  public DataVersionStrategy(String damPath) {
+  protected DataVersionStrategy(String damPath) {
     this.damPath = damPath;
     this.pathPattern = Pattern.compile("^" + Pattern.quote(damPath) + "(/.*)?$");
   }

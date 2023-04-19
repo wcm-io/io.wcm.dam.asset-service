@@ -60,7 +60,7 @@ public class AssetService implements EventHandler {
 
   @ObjectClassDefinition(name = "wcm.io DAM Asset Service",
       description = "A RESTful service for resolving URLs to DAM assets and renditions.")
-  static @interface Config {
+  @interface Config {
 
     @AttributeDefinition(name = "Asset Selector", description = "Selector for attaching REST service to DAM asset paths.")
     String assetServletSelector() default "wcm-io-asset-service";
@@ -150,7 +150,7 @@ public class AssetService implements EventHandler {
     if (StringUtils.isEmpty(selector)) {
       throw new IllegalArgumentException("No selector defined for " + servletInstance.getClass().getName() + " - skipping servlet registration.");
     }
-    Dictionary<String, Object> config = new Hashtable<String, Object>();
+    Dictionary<String, Object> config = new Hashtable<>();
     config.put("sling.servlet.resourceTypes", resourceType);
     config.put("sling.servlet.selectors", selector);
     config.put("sling.servlet.extensions", FileExtension.JSON);
