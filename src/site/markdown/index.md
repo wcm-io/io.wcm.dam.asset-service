@@ -1,4 +1,4 @@
-## About DAM Asset Service
+## About DAM Asset Service (deprecated)
 
 A RESTful service for resolving URLs to assets and renditions.
 
