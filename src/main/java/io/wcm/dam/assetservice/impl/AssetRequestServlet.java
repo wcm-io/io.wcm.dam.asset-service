@@ -20,20 +20,20 @@
 package io.wcm.dam.assetservice.impl;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.json.JsonMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
@@ -50,7 +50,7 @@ class AssetRequestServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
   private final DamPathHandler damPathHandler;
-  private final ObjectMapper objectMapper = new ObjectMapper();
+  private static final JsonMapper JSON_MAPPER = new JsonMapper();
 
   private static final Logger log = LoggerFactory.getLogger(AssetRequestServlet.class);
 
@@ -92,8 +92,8 @@ class AssetRequestServlet extends SlingSafeMethodsServlet {
     // output result json
     ArrayNode resultJson = toResultJson(mediaList);
     response.setContentType(ContentType.JSON);
-    response.setCharacterEncoding(CharEncoding.UTF_8);
-    response.getWriter().write(objectMapper.writeValueAsString(resultJson));
+    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+    response.getWriter().write(JSON_MAPPER.writeValueAsString(resultJson));
   }
 
   private List<Media> resolveMedia(List<AssetRequest> requests, MediaHandler mediaHandler) {
@@ -108,10 +108,10 @@ class AssetRequestServlet extends SlingSafeMethodsServlet {
   }
 
   private ArrayNode toResultJson(List<Media> mediaList) {
-    ArrayNode array = objectMapper.createArrayNode();
+    ArrayNode array = JSON_MAPPER.createArrayNode();
     for (Media media : mediaList) {
       Rendition rendition = media.getRendition();
-      ObjectNode mediaObject = objectMapper.createObjectNode();
+      ObjectNode mediaObject = JSON_MAPPER.createObjectNode();
       mediaObject.put("assetPath", media.getAsset().getPath());
       mediaObject.put("url", media.getUrl());
       if (rendition.getWidth() > 0 && rendition.getHeight() > 0) {
