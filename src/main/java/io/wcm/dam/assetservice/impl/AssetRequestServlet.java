@@ -20,21 +20,22 @@
 package io.wcm.dam.assetservice.impl;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
-import org.apache.sling.commons.json.JSONArray;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.wcm.handler.media.Media;
 import io.wcm.handler.media.MediaHandler;
@@ -45,11 +46,11 @@ import io.wcm.wcm.commons.contenttype.ContentType;
  * Implements a simple REST interface that allows resolving DAM asset paths to URLs.
  * For image assets resolving to specific dimensions is supported.
  */
-@SuppressWarnings("deprecation")
 class AssetRequestServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
   private final DamPathHandler damPathHandler;
+  private static final JsonMapper JSON_MAPPER = new JsonMapper();
 
   private static final Logger log = LoggerFactory.getLogger(AssetRequestServlet.class);
 
@@ -89,15 +90,10 @@ class AssetRequestServlet extends SlingSafeMethodsServlet {
     }
 
     // output result json
-    try {
-      JSONArray resultJson = toResultJson(mediaList);
-      response.setContentType(ContentType.JSON);
-      response.setCharacterEncoding(CharEncoding.UTF_8);
-      response.getWriter().write(resultJson.toString());
-    }
-    catch (JSONException ex) {
-      throw new ServletException("Unable to generate JSON.", ex);
-    }
+    ArrayNode resultJson = toResultJson(mediaList);
+    response.setContentType(ContentType.JSON);
+    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+    response.getWriter().write(JSON_MAPPER.writeValueAsString(resultJson));
   }
 
   private List<Media> resolveMedia(List<AssetRequest> requests, MediaHandler mediaHandler) {
@@ -111,11 +107,11 @@ class AssetRequestServlet extends SlingSafeMethodsServlet {
     return result;
   }
 
-  private JSONArray toResultJson(List<Media> mediaList) throws JSONException {
-    JSONArray array = new JSONArray();
+  private ArrayNode toResultJson(List<Media> mediaList) {
+    ArrayNode array = JSON_MAPPER.createArrayNode();
     for (Media media : mediaList) {
       Rendition rendition = media.getRendition();
-      JSONObject mediaObject = new JSONObject();
+      ObjectNode mediaObject = JSON_MAPPER.createObjectNode();
       mediaObject.put("assetPath", media.getAsset().getPath());
       mediaObject.put("url", media.getUrl());
       if (rendition.getWidth() > 0 && rendition.getHeight() > 0) {
@@ -125,9 +121,15 @@ class AssetRequestServlet extends SlingSafeMethodsServlet {
       if (rendition.getFileSize() > 0) {
         mediaObject.put("fileSize", rendition.getFileSize());
       }
-      mediaObject.putOpt("fileExtension", rendition.getFileExtension());
-      mediaObject.putOpt("mimeType", rendition.getMimeType());
-      array.put(mediaObject);
+      String fileExtension = rendition.getFileExtension();
+      if (fileExtension != null) {
+        mediaObject.put("fileExtension", fileExtension);
+      }
+      String mimeType = rendition.getMimeType();
+      if (mimeType != null) {
+        mediaObject.put("mimeType", mimeType);
+      }
+      array.add(mediaObject);
     }
     return array;
   }

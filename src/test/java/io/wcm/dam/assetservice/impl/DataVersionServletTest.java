@@ -25,8 +25,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
 import org.apache.sling.testing.mock.osgi.MockOsgi;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletRequest;
 import org.apache.sling.testing.mock.sling.servlet.MockSlingHttpServletResponse;
@@ -35,19 +33,21 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
 import com.day.cq.dam.api.DamEvent;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.wcm.dam.assetservice.impl.testcontext.AppAemContext;
 import io.wcm.testing.mock.aem.junit5.AemContext;
 import io.wcm.testing.mock.aem.junit5.AemContextExtension;
 
 @ExtendWith(AemContextExtension.class)
-@SuppressWarnings("deprecation")
 class DataVersionServletTest {
 
   private static final String VALID_DAM_PATH = "/content/dam/sample";
   private static final String INVALID_DAM_PATH = "/content/dam/invalid";
 
   private final AemContext context = AppAemContext.newAemContext();
+  private final ObjectMapper objectMapper = new ObjectMapper();
 
   private AssetService assetService;
   private DataVersionServlet underTest;
@@ -104,13 +104,13 @@ class DataVersionServletTest {
     assertNotEquals("data version", dataVersion1, dataVersion2);
   }
 
-  private String getDataVersion(MockSlingHttpServletResponse response) throws JSONException {
-    JSONObject json = new JSONObject(response.getOutputAsString());
+  private String getDataVersion(MockSlingHttpServletResponse response) throws Exception {
+    JsonNode json = objectMapper.readTree(response.getOutputAsString());
 
     // asset non-caching header is set (pick only one header)
     assertEquals("no-cache", response.getHeader("Dispatcher"));
 
-    return json.getString("dataVersion");
+    return json.get("dataVersion").asText();
   }
 
 }

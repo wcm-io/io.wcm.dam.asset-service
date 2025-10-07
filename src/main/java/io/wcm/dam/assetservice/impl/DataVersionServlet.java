@@ -20,19 +20,20 @@
 package io.wcm.dam.assetservice.impl;
 
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang3.CharEncoding;
 import org.apache.sling.api.SlingHttpServletRequest;
 import org.apache.sling.api.SlingHttpServletResponse;
 import org.apache.sling.api.servlets.SlingSafeMethodsServlet;
-import org.apache.sling.commons.json.JSONException;
-import org.apache.sling.commons.json.JSONObject;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.fasterxml.jackson.databind.json.JsonMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import io.wcm.wcm.commons.caching.CacheHeader;
 import io.wcm.wcm.commons.contenttype.ContentType;
@@ -40,11 +41,11 @@ import io.wcm.wcm.commons.contenttype.ContentType;
 /**
  * Returns generated data version if called on the root of an allowed asset path in DAM.
  */
-@SuppressWarnings("deprecation")
 class DataVersionServlet extends SlingSafeMethodsServlet {
   private static final long serialVersionUID = 1L;
 
   private final DamPathHandler damPathHandler;
+  private static final JsonMapper JSON_MAPPER = new JsonMapper();
 
   private static final Logger log = LoggerFactory.getLogger(DataVersionServlet.class);
 
@@ -64,18 +65,13 @@ class DataVersionServlet extends SlingSafeMethodsServlet {
     }
 
     // return data version as JSON
-    try {
-      JSONObject jsonResponse = new JSONObject();
-      jsonResponse.put("dataVersion", damPathHandler.getDataVersion(path));
+    ObjectNode jsonResponse = JSON_MAPPER.createObjectNode();
+    jsonResponse.put("dataVersion", damPathHandler.getDataVersion(path));
 
-      response.setContentType(ContentType.JSON);
-      response.setCharacterEncoding(CharEncoding.UTF_8);
-      response.getWriter().write(jsonResponse.toString());
-      CacheHeader.setNonCachingHeaders(response);
-    }
-    catch (JSONException ex) {
-      throw new ServletException("Unable to generate JSON.", ex);
-    }
+    response.setContentType(ContentType.JSON);
+    response.setCharacterEncoding(StandardCharsets.UTF_8.name());
+    response.getWriter().write(JSON_MAPPER.writeValueAsString(jsonResponse));
+    CacheHeader.setNonCachingHeaders(response);
   }
 
 }
