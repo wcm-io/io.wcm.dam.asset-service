@@ -24,7 +24,7 @@
   <body>
 
     <release version="1.6.0" date="not released">
-      <action type="update" dev="sseifert">
+      <action type="update" dev="sseifert" issue="1">
         Switch to wcm.io Handler 2.x.
       </action>
     </release>
