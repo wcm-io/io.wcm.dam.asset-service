@@ -51,5 +51,5 @@ Sources: https://github.com/wcm-io/io.wcm.dam.asset-service
 
 [rest-interface]: rest-interface.html
 [configuration]: configuration.html
-[changelog]: changes-report.html
+[changelog]: changes.html
 [media-handler]: https://wcm.io/handler/media/
