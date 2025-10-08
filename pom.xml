@@ -31,7 +31,7 @@
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.dam.asset-service</artifactId>
-  <version>1.6.0</version>
+  <version>1.6.1-SNAPSHOT</version>
   <packaging>jar</packaging>
 
   <name>DAM Asset Service</name>
@@ -49,7 +49,7 @@
     <site.url.module.prefix>dam/asset-service</site.url.module.prefix>
 
     <!-- Enable reproducible builds -->
-    <project.build.outputTimestamp>2025-10-08T07:30:23Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-10-08T07:30:52Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
