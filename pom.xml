@@ -25,13 +25,13 @@
   <parent>
     <groupId>io.wcm</groupId>
     <artifactId>io.wcm.parent_toplevel</artifactId>
-    <version>2.2.0</version>
+    <version>2.6.0</version>
     <relativePath/>
   </parent>
 
   <groupId>io.wcm</groupId>
   <artifactId>io.wcm.dam.asset-service</artifactId>
-  <version>1.5.0</version>
+  <version>1.6.0</version>
   <packaging>jar</packaging>
 
   <name>DAM Asset Service</name>
@@ -49,7 +49,7 @@
     <site.url.module.prefix>dam/asset-service</site.url.module.prefix>
 
     <!-- Enable reproducible builds -->
-    <project.build.outputTimestamp>2023-04-19T11:29:39Z</project.build.outputTimestamp>
+    <project.build.outputTimestamp>2025-10-08T07:30:23Z</project.build.outputTimestamp>
   </properties>
 
   <dependencies>
@@ -71,7 +71,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.handler.media</artifactId>
-      <version>1.10.0</version>
+      <version>2.0.0</version>
       <scope>compile</scope>
     </dependency>
 
@@ -110,7 +110,7 @@
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.aem-mock.junit5</artifactId>
-      <version>5.0.0</version>
+      <version>5.6.10</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -122,31 +122,37 @@
     <dependency>
       <groupId>org.skyscreamer</groupId>
       <artifactId>jsonassert</artifactId>
-      <version>1.5.0</version>
+      <version>1.5.3</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.apache.sling</groupId>
       <artifactId>org.apache.sling.testing.caconfig-mock-plugin</artifactId>
-      <version>1.4.0</version>
+      <version>1.5.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.wcm-io-mock.sling</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.wcm</groupId>
+      <artifactId>io.wcm.testing.wcm-io-mock.wcm</artifactId>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.wcm-io-mock.caconfig</artifactId>
-      <version>1.1.0</version>
+      <version>1.2.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>io.wcm</groupId>
       <artifactId>io.wcm.testing.wcm-io-mock.handler</artifactId>
-      <version>1.4.0</version>
+      <version>2.0.0</version>
       <scope>test</scope>
     </dependency>
 
@@ -198,6 +204,23 @@
       </plugin>
 
     </plugins>
+    <pluginManagement>
+      <plugins>
+
+        <!--
+          This project has no javadocs as it has no exported OSGi packages.
+          But we need to generate a javadoc jar to surpass the checks of Sonatype Central portal, which has no clue of OSGi bundles.
+        -->
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-javadoc-plugin</artifactId>
+          <configuration>
+            <excludePackageNames>:</excludePackageNames>
+          </configuration>
+        </plugin>
+
+      </plugins>
+    </pluginManagement>
   </build>
 
   <distributionManagement>
